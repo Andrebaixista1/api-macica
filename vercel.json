@@ -7,10 +7,10 @@
       }
     ],
     "env": {
-      "DB_HOST_QUERIES": "26.87.3.24",
-      "DB_USER_QUERIES": "andrefelipe",
+      "DB_HOST_QUERIES": "45.179.90.229",
+      "DB_USER_QUERIES": "planejamento",
       "DB_PASS_QUERIES": "899605aA@",
-      "DB_NAME_QUERIES": "database_bckp_api"
+      "DB_NAME_QUERIES": "inbis"
     }
   }
   

@@ -25,11 +25,11 @@ app.post('/query', async (req, res) => {
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4',
         messages: [
           {
             role: 'system',
-            content: 'Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela consignados_122023. Sempre gere instruções SQL válidas sem texto extra. A tabela consignados_122023 possui uma coluna dt-nascimento em formato YYYY-MM-DD. Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.'
+            content: 'Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela ip_data. Sempre gere instruções SQL válidas sem texto extra. A tabela ip_data possui uma coluna dt-nascimento em formato YYYY-MM-DD. Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.'
           },
           {
             role: 'user',
