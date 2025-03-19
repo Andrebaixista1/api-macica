@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "env": {
+      "DB_HOST_QUERIES": "26.87.3.24",
+      "DB_USER_QUERIES": "andrefelipe",
+      "DB_PASS_QUERIES": "899605aA@",
+      "DB_NAME_QUERIES": "database_bckp_api"
+    }
+  }
+  
