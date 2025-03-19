@@ -10,8 +10,10 @@ const connection = mysql.createConnection({
   host: process.env.DB_HOST_QUERIES,
   user: process.env.DB_USER_QUERIES,
   password: process.env.DB_PASS_QUERIES,
-  database: process.env.DB_NAME_QUERIES
+  database: process.env.DB_NAME_QUERIES,
+  connectTimeout: 10000  // 10 segundos de timeout
 });
+
 
 app.post('/query', async (req, res) => {
   const userPrompt = req.body.prompt;
