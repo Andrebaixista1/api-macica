@@ -6,7 +6,6 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-// Conexão com o banco
 const connection = mysql.createConnection({
   host: process.env.DB_HOST_QUERIES,
   user: process.env.DB_USER_QUERIES,
@@ -19,7 +18,6 @@ function getOpenAIApiKey() {
   return new Promise((resolve, reject) => {
     connection.query('SELECT `OPENAI_API_KEY` FROM api_token LIMIT 1', (err, results) => {
       if (err) {
-        console.error('Erro ao buscar token:', err);
         return reject(err);
       }
       if (results.length > 0) {
@@ -36,12 +34,8 @@ app.post('/query', async (req, res) => {
   if (!userPrompt) {
     return res.status(400).json({ error: 'Prompt não informado.' });
   }
-
   try {
-    // Pega a chave do banco
     const openaiApiKey = await getOpenAIApiKey();
-
-    // Chama a API da OpenAI
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
@@ -66,28 +60,18 @@ app.post('/query', async (req, res) => {
         }
       }
     );
-
     const sqlQuery = openaiResponse.data.choices[0].message.content.trim();
-    console.log('Query gerada:', sqlQuery);
-
-    // Executa a query
     connection.query(sqlQuery, (err, results) => {
       if (err) {
-        console.error('Erro ao executar a query:', err);
         return res.status(500).json({ error: err.message });
       }
       res.json(results);
     });
   } catch (error) {
-    console.error('Erro na operação:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-/**
- * Se estiver rodando local (node index.js), vamos escutar na porta 3000.
- * No Vercel, não executamos este bloco, pois o arquivo é importado (não executado diretamente).
- */
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
@@ -95,5 +79,4 @@ if (require.main === module) {
   });
 }
 
-// Exportamos o app para o Vercel (ambiente serverless)
 module.exports = app;
