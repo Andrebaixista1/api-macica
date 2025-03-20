@@ -43,7 +43,11 @@ app.post('/query', async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: 'Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela consignados_122023_test. Sempre gere instruções SQL válidas sem texto extra. A tabela consignados_122023_test possui uma coluna dt-nascimento em formato YYYY-MM-DD. Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.'
+            content: `Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela consignados_122023_test. 
+            Sempre gere instruções SQL válidas sem texto extra. 
+            A tabela consignados_122023_test possui uma coluna dt-nascimento em formato YYYY-MM-DD. 
+            Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. 
+            Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.`          
           },
           {
             role: 'user',
