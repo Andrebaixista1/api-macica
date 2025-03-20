@@ -6,6 +6,7 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
+// Conexão com o banco
 const connection = mysql.createConnection({
   host: process.env.DB_HOST_QUERIES,
   user: process.env.DB_USER_QUERIES,
@@ -37,7 +38,10 @@ app.post('/query', async (req, res) => {
   }
 
   try {
+    // Pega a chave do banco
     const openaiApiKey = await getOpenAIApiKey();
+
+    // Chama a API da OpenAI
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
@@ -45,7 +49,7 @@ app.post('/query', async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: 'Você é um assistente que converte pedidos em português para consultas SQL...'
+            content: 'Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela consignados_122023_test. Sempre gere instruções SQL válidas sem texto extra. A tabela consignados_122023_test possui uma coluna dt-nascimento em formato YYYY-MM-DD. Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.'
           },
           {
             role: 'user',
@@ -66,6 +70,7 @@ app.post('/query', async (req, res) => {
     const sqlQuery = openaiResponse.data.choices[0].message.content.trim();
     console.log('Query gerada:', sqlQuery);
 
+    // Executa a query
     connection.query(sqlQuery, (err, results) => {
       if (err) {
         console.error('Erro ao executar a query:', err);
@@ -79,5 +84,16 @@ app.post('/query', async (req, res) => {
   }
 });
 
-// Exportamos o app em vez de usar app.listen
+/**
+ * Se estiver rodando local (node index.js), vamos escutar na porta 3000.
+ * No Vercel, não executamos este bloco, pois o arquivo é importado (não executado diretamente).
+ */
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+// Exportamos o app para o Vercel (ambiente serverless)
 module.exports = app;
