@@ -6,22 +6,16 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-// Conexão com o banco de dados usando as credenciais definidas no .env
 const connection = mysql.createConnection({
   host: process.env.DB_HOST_QUERIES,
   user: process.env.DB_USER_QUERIES,
   password: process.env.DB_PASS_QUERIES,
   database: process.env.DB_NAME_QUERIES,
-  connectTimeout: 10000  // 10 segundos de timeout
+  connectTimeout: 10000
 });
 
-/**
- * Função para buscar a chave OPENAI_API_KEY da tabela api_token.
- * @returns {Promise<string>} Retorna a chave da API.
- */
 function getOpenAIApiKey() {
   return new Promise((resolve, reject) => {
-    // Consulta que busca a chave na tabela (limita a 1 registro)
     connection.query('SELECT `OPENAI_API_KEY` FROM api_token LIMIT 1', (err, results) => {
       if (err) {
         console.error('Erro ao buscar token:', err);
@@ -43,10 +37,7 @@ app.post('/query', async (req, res) => {
   }
 
   try {
-    // Recupera a chave da API do banco de dados
     const openaiApiKey = await getOpenAIApiKey();
-
-    // Chama a API da OpenAI utilizando a chave recuperada
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
@@ -54,7 +45,7 @@ app.post('/query', async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: 'Você é um assistente que converte pedidos em português para consultas SQL válidas usando a tabela consignados_122023_test. Sempre gere instruções SQL válidas sem texto extra. A tabela consignados_122023_test possui uma coluna dt-nascimento em formato YYYY-MM-DD. Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.'
+            content: 'Você é um assistente que converte pedidos em português para consultas SQL...'
           },
           {
             role: 'user',
@@ -75,7 +66,6 @@ app.post('/query', async (req, res) => {
     const sqlQuery = openaiResponse.data.choices[0].message.content.trim();
     console.log('Query gerada:', sqlQuery);
 
-    // Executa a query SQL gerada
     connection.query(sqlQuery, (err, results) => {
       if (err) {
         console.error('Erro ao executar a query:', err);
@@ -89,7 +79,5 @@ app.post('/query', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Exportamos o app em vez de usar app.listen
+module.exports = app;
