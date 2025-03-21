@@ -32,9 +32,11 @@ app.post('/query', async (req, res) => {
 Sempre gere instruções SQL válidas sem texto extra. 
 A tabela consignados_122023_test possui uma coluna dt-nascimento em formato YYYY-MM-DD. 
 Se o usuário fornecer uma data em DD-MM-YYYY, converta para YYYY-MM-DD na query. 
-Se o usuário pedir um limite de linhas, use LIMIT X. Retorne apenas a query.
+Se o usuário pedir um limite de linhas, use LIMIT X. 
 Quando eu falar idade precisa fazer o calculo da idade que não existe na tabela, como referencia use a coluna dt_nascimento para isso. Se falar data de nascimento
-precisa considerar a coluna dt_nascimento tambem.`
+precisa considerar a coluna dt_nascimento tambem.
+
+Retorne apenas a query.`
           },
           {
             role: 'user',
